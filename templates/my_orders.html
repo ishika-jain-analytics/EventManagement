@@ -1,0 +1,20 @@
+<h2>My Orders</h2>
+
+<table border="1">
+<tr>
+    <th>Order ID</th>
+    <th>Total Amount</th>
+    <th>Status</th>
+</tr>
+
+{% for order in orders %}
+<tr>
+    <td>{{order.id}}</td>
+    <td>{{order.total_amount}}</td>
+    <td>{{order.status}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<a href="/user">Back</a>

@@ -1,0 +1,24 @@
+<h2>Manage Services</h2>
+
+<table border="1">
+<tr>
+    <th>Service</th>
+    <th>Vendor</th>
+    <th>Price</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+{% for s in services %}
+<tr>
+    <td>{{s.name}}</td>
+    <td>{{s.vendor_name}}</td>
+    <td>{{s.price}}</td>
+    <td>{{s.status}}</td>
+    <td>
+        <a href="/approve/{{s.id}}">Approve</a>
+        <a href="/reject/{{s.id}}">Reject</a>
+    </td>
+</tr>
+{% endfor %}
+</table>

@@ -1,0 +1,39 @@
+<h2>Register</h2>
+<form method="POST">
+    Name: <input name="name"><br>
+    Email: <input name="email"><br>
+    Password: <input name="password"><br>
+    
+    Role:
+<select name="role" id="role" onchange="toggleCategory()">
+    <option value="user">User</option>
+    <option value="vendor">Vendor</option>
+</select><br>
+
+    <div id="categoryBox" style="display:none;">
+    Category:
+    <select name="category">
+        <option value="">Select Category</option>
+        <option value="Catering">Catering</option>
+        <option value="Florist">Florist</option>
+        <option value="Decoration">Decoration</option>
+        <option value="Lighting">Lighting</option>
+    </select><br>
+</div>
+
+
+    <button type="submit">Register</button>
+</form>
+<script>
+function toggleCategory() {
+    var role = document.getElementById("role").value;
+    var box = document.getElementById("categoryBox");
+
+    if (role === "vendor") {
+        box.style.display = "block";
+    } else {
+        box.style.display = "none";
+    }
+}
+</script>
+

@@ -1,0 +1,22 @@
+<h2>All Orders</h2>
+
+<table border="1">
+<tr>
+    <th>Order ID</th>
+    <th>User</th>
+    <th>Total</th>
+    <th>Status</th>
+</tr>
+
+{% for order in orders %}
+<tr>
+    <td>{{order.id}}</td>
+    <td>{{order.user_name}}</td>
+    <td>{{order.total_amount}}</td>
+    <td>{{order.status}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<br>
+<a href="/admin">Back</a>

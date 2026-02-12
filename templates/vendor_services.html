@@ -1,0 +1,19 @@
+<h2>My Services</h2>
+
+<table border="1">
+<tr>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Price</th>
+    <th>Status</th>
+</tr>
+
+{% for s in services %}
+<tr>
+    <td>{{s.name}}</td>
+    <td>{{s.category}}</td>
+    <td>{{s.price}}</td>
+    <td>{{s.status}}</td>
+</tr>
+{% endfor %}
+</table>
