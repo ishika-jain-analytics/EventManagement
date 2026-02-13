@@ -1,19 +1,361 @@
-<h2>My Services</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Services - Event Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<table border="1">
-<tr>
-    <th>Name</th>
-    <th>Category</th>
-    <th>Price</th>
-    <th>Status</th>
-</tr>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-{% for s in services %}
-<tr>
-    <td>{{s.name}}</td>
-    <td>{{s.category}}</td>
-    <td>{{s.price}}</td>
-    <td>{{s.status}}</td>
-</tr>
-{% endfor %}
-</table>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h3 {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filters select {
+            padding: 8px 15px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+            cursor: pointer;
+        }
+
+        .filters button {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filters button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .service-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            color: white;
+        }
+
+        .service-header h4 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .vendor-name {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .service-body {
+            padding: 20px;
+        }
+
+        .description {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .price {
+            font-size: 1.5em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .price span {
+            font-size: 0.6em;
+            color: #999;
+            font-weight: 400;
+        }
+
+        .quantity-input {
+            margin-bottom: 15px;
+        }
+
+        .quantity-input label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .quantity-input input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .add-to-cart-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .add-to-cart-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .add-to-cart-btn:active {
+            transform: scale(0.98);
+        }
+
+        .empty-state {
+            background: white;
+            padding: 40px 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h3>Event Management System</h3>
+        <div class="nav-links">
+            <a href="/user_dashboard">Dashboard</a>
+            <a href="/cart">Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>{{ category }} Services</h2>
+            
+            <div class="filters">
+                <label for="vendor-select">Select Vendor:</label>
+                <select id="vendor-select" onchange="updateVendor(this.value)">
+                    <option value="">All Vendors</option>
+                    {% for vendor in vendors %}
+                        <option value="{{ vendor['vendor_id'] }}" {% if selected_vendor and selected_vendor|string == vendor['vendor_id']|string %}selected{% endif %}>
+                            {{ vendor['name'] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        {% if services %}
+            <div class="services-grid">
+                {% for service in services %}
+                    <div class="service-card">
+                        <div class="service-header">
+                            <h4>{{ service['name'] }}</h4>
+                            <div class="vendor-name">Vendor Services</div>
+                        </div>
+                        <div class="service-body">
+                            {% if service['description'] %}
+                                <div class="description">{{ service['description'] }}</div>
+                            {% endif %}
+                            
+                            <div class="price">₹{{ "%.2f"|format(service['price']) }}</div>
+                            
+                            <div class="quantity-input">
+                                <label for="qty-{{ service['service_id'] }}">Quantity:</label>
+                                <input type="number" id="qty-{{ service['service_id'] }}" value="1" min="1" class="qty-input">
+                            </div>
+                            
+                            <button class="add-to-cart-btn" onclick="addToCart({{ service['service_id'] }}, {{ service['vendor_id'] }})">
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No services available for this vendor.</p>
+                <a href="/user_dashboard">Back to Dashboard</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function addToCart(serviceId, vendorId) {
+            const quantity = parseInt(document.getElementById(`qty-${serviceId}`).value) || 1;
+            
+            fetch('/add_to_cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    service_id: serviceId,
+                    vendor_id: vendorId,
+                    quantity: quantity
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Added to cart successfully!');
+                    document.getElementById(`qty-${serviceId}`).value = 1;
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function updateVendor(vendorId) {
+            const category = "{{ category }}";
+            if (vendorId) {
+                window.location.href = `/vendor_services?category=${category}&vendor_id=${vendorId}`;
+            } else {
+                window.location.href = `/vendor_services?category=${category}`;
+            }
+        }
+    </script>
+</body>
+</html>

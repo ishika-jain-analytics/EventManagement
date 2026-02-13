@@ -1,95 +1,154 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Management System</title>
-
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-
-            /* Background Image */
-            background: url("https://images.unsplash.com/photo-1511578314322-379afb476865") no-repeat center center fixed;
-            background-size: cover;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Glass Card */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .container {
-            width: 420px;
-            padding: 40px;
-            border-radius: 12px;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(8px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            width: 90%;
+            max-width: 1000px;
+        }
+
+        .header {
             text-align: center;
             color: white;
+            margin-bottom: 60px;
         }
 
-        .title {
-            font-size: 26px;
-            font-weight: bold;
+        .header h1 {
+            font-size: 3em;
             margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        .subtitle {
-            font-size: 14px;
-            margin-bottom: 30px;
-            color: #dcdcdc;
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
         }
 
-        /* Buttons */
-        .btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin: 12px 0;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            text-decoration: none;
+        .buttons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .btn-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-card h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .btn-card a, .btn-card button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            background: linear-gradient(90deg, #4facfe, #00c6ff);
-            transition: 0.2s;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin: 5px;
         }
 
-        .btn:hover {
+        .btn-card a:hover, .btn-card button:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .footer {
-            margin-top: 20px;
-            font-size: 12px;
-            color: #cccccc;
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #f0f0f0;
+        }
+
+        .tech-tag {
+            text-align: center;
+            color: white;
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .buttons-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
-
 <body>
+    <div class="container">
+        <div class="header">
+            <h1>Event Management System</h1>
+            <p>Book your perfect event vendors and services</p>
+        </div>
 
-<div class="container">
+        <div class="buttons-grid">
+            <div class="btn-card">
+                <h3>User Portal</h3>
+                <a href="/user_login">User Login</a>
+                <a href="/user_register" class="btn-secondary">Register</a>
+            </div>
 
-    <div class="title">Welcome</div>
-    <div class="subtitle">
-        Event Management System<br>
-        Please select your role to continue
+            <div class="btn-card">
+                <h3>Vendor Portal</h3>
+                <a href="/vendor_login">Vendor Login</a>
+                <a href="/vendor_register" class="btn-secondary">Register</a>
+            </div>
+
+            <div class="btn-card">
+                <h3>Admin Portal</h3>
+                <a href="/admin_login">Admin Login</a>
+            </div>
+        </div>
+
+        <div class="tech-tag">
+            <p>Built with Python | HTML | CSS</p>
+        </div>
     </div>
-
-    <a href="/login/user" class="btn">Login as User</a>
-    <a href="/login/vendor" class="btn">Login as Vendor</a>
-    <a href="/login/admin" class="btn">Login as Admin</a>
-
-    <div class="footer">
-        Manage events • Connect vendors • Track services
-    </div>
-
-</div>
-
 </body>
 </html>

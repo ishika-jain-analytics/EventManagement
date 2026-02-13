@@ -1,20 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Event Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<h2>Your Cart</h2>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<table border="1">
-<tr>
-    <th>Service</th>
-    <th>Price</th>
-</tr>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-{% for item in items %}
-<tr>
-    <td>{{item.name}}</td>
-    <td>{{item.price}}</td>
-</tr>
-{% endfor %}
-</table>
+        .navbar h3 {
+            color: #667eea;
+            font-size: 1.3em;
+        }
 
-<br>
-<a href="/checkout">Checkout</a>
-<a href="/user">Back</a>
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            color: #667eea;
+        }
+
+        .cart-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        .cart-items {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .cart-header {
+            background: #f8f9fa;
+            padding: 15px 20px;
+            border-bottom: 2px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+            gap: 15px;
+            font-weight: 600;
+            color: #333;
+            font-size: 0.9em;
+        }
+
+        .cart-item {
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .cart-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-name {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .item-vendor {
+            color: #999;
+            font-size: 0.85em;
+        }
+
+        .item-price {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .item-total {
+            color: #764ba2;
+            font-weight: 700;
+        }
+
+        .remove-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8em;
+            transition: background 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+        }
+
+        .summary {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .summary h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .summary-row.total {
+            border-top: 2px solid #e0e0e0;
+            padding-top: 15px;
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 700;
+        }
+
+        .summary-row.total span:last-child {
+            color: #667eea;
+        }
+
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-checkout {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-checkout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #ecf0f1;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+        }
+
+        .btn-clear:hover {
+            background: #fff;
+        }
+
+        .btn-continue {
+            background: #95a5a6;
+            color: white;
+        }
+
+        .btn-continue:hover {
+            background: #7f8c8d;
+        }
+
+        .empty-cart {
+            background: white;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-cart p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .empty-cart a {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .checkout-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .checkout-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkout-form {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .checkout-form h3 {
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.9em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.95em;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .close-btn {
+            color: #999;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .close-btn:hover {
+            color: #333;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .modal-buttons .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .modal-buttons .btn-cancel {
+            background: #ecf0f1;
+            color: #666;
+        }
+
+        @media (max-width: 968px) {
+            .cart-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-header,
+            .cart-item {
+                grid-template-columns: 1fr;
+            }
+
+            .summary {
+                height: auto;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h3>Event Management System</h3>
+        <div class="nav-links">
+            <a href="/user_dashboard">Dashboard</a>
+            <a href="/cart">Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Shopping Cart</h2>
+        </div>
+
+        {% if cart_items %}
+            <div class="cart-layout">
+                <div class="cart-items">
+                    <div class="cart-header">
+                        <div>Service</div>
+                        <div>Price</div>
+                        <div>Quantity</div>
+                        <div>Total</div>
+                        <div></div>
+                    </div>
+                    {% for item in cart_items %}
+                        <div class="cart-item">
+                            <div>
+                                <div class="item-name">{{ item['name'] }}</div>
+                                <div class="item-vendor">{{ item['vendor_name'] }}</div>
+                            </div>
+                            <div class="item-price">₹{{ "%.2f"|format(item['price']) }}</div>
+                            <div>{{ item['quantity'] }}</div>
+                            <div class="item-total">₹{{ "%.2f"|format(item['price'] * item['quantity']) }}</div>
+                            <form method="POST" action="/remove_from_cart/{{ item['cart_id'] }}" style="display: inline;">
+                                <button type="submit" class="remove-btn">Remove</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="summary">
+                    <h3>Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal:</span>
+                        <span>₹{{ "%.2f"|format(total) }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Tax (0%):</span>
+                        <span>₹0.00</span>
+                    </div>
+                    <div class="summary-row total">
+                        <span>Total:</span>
+                        <span>₹{{ "%.2f"|format(total) }}</span>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button class="btn btn-checkout" onclick="openCheckout()">Proceed to Checkout</button>
+                        <form method="POST" action="/clear_cart" style="display: inline;">
+                            <button type="submit" class="btn btn-clear" style="width: 100%;">Clear Cart</button>
+                        </form>
+                        <a href="/user_dashboard" class="btn btn-continue" style="text-align: center; text-decoration: none;">Continue Shopping</a>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-cart">
+                <p>Your cart is empty</p>
+                <a href="/user_dashboard">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <div id="checkoutModal" class="checkout-modal">
+        <div class="checkout-form">
+            <span class="close-btn" onclick="closeCheckout()">&times;</span>
+            <h3>Checkout</h3>
+            <form method="POST" action="/checkout">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Address *</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City *</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="state">State *</label>
+                        <input type="text" id="state" name="state" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="pin">Pin Code *</label>
+                        <input type="text" id="pin" name="pin" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="payment">Payment Method *</label>
+                    <select id="payment" name="payment_method" required>
+                        <option value="">Select Payment Method</option>
+                        <option value="Cash">Cash on Delivery</option>
+                        <option value="UPI">UPI</option>
+                    </select>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="btn-cancel" onclick="closeCheckout()">Cancel</button>
+                    <button type="submit" class="btn-submit">Place Order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openCheckout() {
+            document.getElementById('checkoutModal').classList.add('show');
+        }
+
+        function closeCheckout() {
+            document.getElementById('checkoutModal').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('checkoutModal');
+            if (event.target == modal) {
+                modal.classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>

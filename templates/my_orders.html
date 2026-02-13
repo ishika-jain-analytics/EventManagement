@@ -1,20 +1,271 @@
-<h2>My Orders</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Event Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<table border="1">
-<tr>
-    <th>Order ID</th>
-    <th>Total Amount</th>
-    <th>Status</th>
-</tr>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-{% for order in orders %}
-<tr>
-    <td>{{order.id}}</td>
-    <td>{{order.total_amount}}</td>
-    <td>{{order.status}}</td>
-</tr>
-{% endfor %}
-</table>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
 
-<br>
-<a href="/user">Back</a>
+        .navbar h3 {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            color: #667eea;
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            color: white;
+        }
+
+        .order-id {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .order-date {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .order-body {
+            padding: 20px;
+        }
+
+        .order-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .order-row strong {
+            color: #333;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status.received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.ready {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status.delivery {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state a {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .amount {
+            font-size: 1.3em;
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h3>Event Management System</h3>
+        <div class="nav-links">
+            <a href="/user_dashboard">Dashboard</a>
+            <a href="/cart">Cart</a>
+            <a href="/my_orders">My Orders</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>My Orders</h2>
+        </div>
+
+        {% if orders %}
+            <div class="orders-grid">
+                {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-id">Order #{{ order['order_id'] }}</div>
+                            <div class="order-date">{{ order['created_at']|replace(' ', ' ') }}</div>
+                        </div>
+                        <div class="order-body">
+                            <div class="order-row">
+                                <strong>Total:</strong>
+                                <span class="amount">₹{{ "%.2f"|format(order['total']) }}</span>
+                            </div>
+                            
+                            <div class="order-row">
+                                <strong>Items:</strong>
+                                <span>{{ order['item_count'] }}</span>
+                            </div>
+                            
+                            <div class="order-row">
+                                <strong>Payment:</strong>
+                                <span>{{ order['payment_method'] }}</span>
+                            </div>
+                            
+                            <div>
+                                {% if order['status'] == 'Received' %}
+                                    <span class="status received">{{ order['status'] }}</span>
+                                {% elif order['status'] == 'Ready for Shipping' %}
+                                    <span class="status ready">{{ order['status'] }}</span>
+                                {% elif order['status'] == 'Out for Delivery' %}
+                                    <span class="status delivery">{{ order['status'] }}</span>
+                                {% else %}
+                                    <span class="status received">{{ order['status'] }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>You haven't placed any orders yet.</p>
+                <a href="/user_dashboard">Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

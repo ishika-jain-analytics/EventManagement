@@ -1,10 +1,365 @@
-<h2>Request Custom Service</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Orders - Event Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-<form method="POST">
-    Describe your requirement:<br>
-    <textarea name="description"></textarea><br><br>
-    <button type="submit">Submit Request</button>
-</form>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-<br>
-<a href="/user">Back</a>
+        .navbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h3 {
+            color: #667eea;
+            font-size: 1.3em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header h2 {
+            color: #667eea;
+        }
+
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .order-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 15px;
+            color: white;
+        }
+
+        .order-id {
+            font-size: 1.1em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .order-date {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .order-body {
+            padding: 20px;
+        }
+
+        .customer-info {
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 15px;
+        }
+
+        .customer-info h4 {
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .info-row strong {
+            color: #333;
+        }
+
+        .services-list {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .services-list h4 {
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .service-item {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+            padding-left: 10px;
+            border-left: 3px solid #667eea;
+        }
+
+        .order-total {
+            font-size: 1.2em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .status-section {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .status-label {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .status.received {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status.ready {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status.delivery {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-select {
+            width: 100%;
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.85em;
+            cursor: pointer;
+        }
+
+        .status-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .update-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .update-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .empty-state {
+            background: white;
+            padding: 60px 20px;
+            border-radius: 12px;
+            text-align: center;
+            color: #999;
+        }
+
+        .empty-state p {
+            font-size: 1.1em;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+
+            .orders-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h3>Event Management System</h3>
+        <div class="nav-links">
+            <a href="/vendor_dashboard">Dashboard</a>
+            <a href="/manage_services">Services</a>
+            <a href="/request_item">Orders</a>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="page-header">
+            <h2>Customer Orders</h2>
+        </div>
+
+        {% if orders %}
+            <div class="orders-grid">
+                {% for order in orders %}
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-id">Order #{{ order['order_id'] }}</div>
+                            <div class="order-date">{{ order['created_at'] }}</div>
+                        </div>
+                        <div class="order-body">
+                            <div class="customer-info">
+                                <h4>Customer Details</h4>
+                                <div class="info-row">
+                                    <strong>Name:</strong>
+                                    <span>{{ order['customer_name'] }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <strong>Email:</strong>
+                                    <span>{{ order['customer_email'] }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <strong>Phone:</strong>
+                                    <span>{{ order['customer_phone'] }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <strong>Address:</strong>
+                                    <span>{{ order['customer_address'] }}, {{ order['customer_city'] }}</span>
+                                </div>
+                            </div>
+
+                            <div class="services-list">
+                                <h4>Services</h4>
+                                {% for service in order['services'].split(',') %}
+                                    <div class="service-item">
+                                        {{ service.strip() }}
+                                    </div>
+                                {% endfor %}
+                            </div>
+
+                            <div class="order-total">
+                                Total: ₹{{ "%.2f"|format(order['total']) }}
+                            </div>
+
+                            <div class="status-section">
+                                <div class="status-label">Update Status</div>
+                                <form method="POST" action="/update_order_status">
+                                    <input type="hidden" name="order_id" value="{{ order['order_id'] }}">
+                                    <select name="status" class="status-select">
+                                        <option value="Received" {% if order['status'] == 'Received' %}selected{% endif %}>Received</option>
+                                        <option value="Ready for Shipping" {% if order['status'] == 'Ready for Shipping' %}selected{% endif %}>Ready for Shipping</option>
+                                        <option value="Out for Delivery" {% if order['status'] == 'Out for Delivery' %}selected{% endif %}>Out for Delivery</option>
+                                    </select>
+                                    <button type="submit" class="update-btn">Update Status</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <p>No orders yet. Check back later!</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

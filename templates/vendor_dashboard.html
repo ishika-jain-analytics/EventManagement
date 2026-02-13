@@ -1,140 +1,228 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Vendor Dashboard</title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vendor Dashboard - Event Management</title>
     <style>
-        body {
+        * {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        /* Top Navbar */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
         .navbar {
-            background: #2c3e50;
-            color: white;
+            background: white;
             padding: 15px 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar h2 {
-            margin: 0;
+        .navbar h3 {
+            color: #667eea;
+            font-size: 1.3em;
         }
 
-        .navbar a {
-            color: white;
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #333;
             text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .logout-btn {
             background: #e74c3c;
-            padding: 6px 12px;
-            border-radius: 4px;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
         }
 
-        /* Main Container */
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
         .container {
-            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
-        /* Card */
-        .card {
+        .welcome {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .welcome h2 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
             background: white;
             padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            max-width: 500px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        h3 {
-            margin-top: 0;
-            color: #2c3e50;
+        .stat-number {
+            font-size: 2.5em;
+            color: #667eea;
+            font-weight: 700;
+            margin-bottom: 10px;
         }
 
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
+        .stat-label {
+            color: #999;
+            font-size: 0.95em;
+            font-weight: 600;
         }
 
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
 
-        textarea {
-            resize: none;
+        .action-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
         }
 
-        button {
-            margin-top: 15px;
-            padding: 10px;
-            width: 100%;
-            background: #3498db;
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .action-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .action-card p {
+            color: #999;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
         }
 
-        button:hover {
-            background: #2980b9;
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
         }
 
-        .link {
-            margin-top: 15px;
-        }
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
 
-        .link a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-        }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
 
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-
-<!-- Navbar -->
-<div class="navbar">
-    <h2>Vendor Dashboard</h2>
-    <a href="/logout">Logout</a>
-</div>
-
-<!-- Content -->
-<div class="container">
-
-    <div class="card">
-        <h3>Add Service</h3>
-
-        <form method="POST" action="/add_service">
-
-            <label>Service Name</label>
-            <input type="text" name="name" required>
-
-            <label>Category</label>
-            <input type="text" name="category" required>
-
-            <label>Price</label>
-            <input type="number" name="price" required>
-
-            <label>Description</label>
-            <textarea name="description" rows="3" required></textarea>
-
-            <button type="submit">Add Service</button>
-
-        </form>
-
-        <div class="link">
-            <a href="/vendor_services">View My Services</a>
+    <div class="navbar">
+        <h3>Event Management System</h3>
+        <div class="nav-links">
+            <a href="/vendor_dashboard">Dashboard</a>
+            <a href="/manage_services">Services</a>
+            <a href="/request_item">Orders</a>
+            <a href="/logout" class="logout-btn">Logout</a>
         </div>
-
     </div>
 
-</div>
+    <div class="container">
+        <div class="welcome">
+            <h2>Welcome, {{ vendor_name }}!</h2>
+            <p>Manage your services and view customer orders</p>
+        </div>
 
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number">{{ service_count }}</div>
+                <div class="stat-label">Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">{{ order_count }}</div>
+                <div class="stat-label">Orders</div>
+            </div>
+        </div>
+
+        <div class="actions-grid">
+            <div class="action-card">
+                <h3>Service Management</h3>
+                <p>Add, edit, or delete your services and set pricing</p>
+                <a href="/manage_services" class="btn">Manage Services</a>
+            </div>
+
+            <div class="action-card">
+                <h3>View Orders</h3>
+                <p>Check customer orders and update delivery status</p>
+                <a href="/request_item" class="btn">View Orders</a>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
